@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext } from "react";
 import "./App.css";
 import Header from "./Components/Header";
-import SearchBar from "./Components/SearchBar";
 import Categories from "./Components/Categories";
 import Describe from "./Components/Describe";
 import SearchButton from "./Components/SearchButton";
@@ -54,31 +53,27 @@ const App = () => {
   }, []);
 
   //Fetch country data
- 
+
   return (
     <GenresContext.Provider value={{ selectedGenres, setSelectedGenres }}>
       <LanguageContext.Provider
         value={{ languages, selectedLang, setSelectedLang }}
       >
-    
-          <div className="m-10">
-            <div className="mb-11">
-              <Header />
+        <div className="m-10">
+          <div className="mb-11">
+            <Header />
+          </div>
+          <div className="ml-5 mr-5">
+            <LanguageSelect />
+            <Categories genres={genres} />
+            <div>
+              <Describe />
             </div>
-            <div className="ml-5 mr-5">
-              <div className="mb-5">
-                <SearchBar />
-              </div>
-              <LanguageSelect />
-              <Categories genres={genres} />
-              <div>
-                <Describe />
-              </div>
-              <div>
-                <SearchButton />
-              </div>
+            <div>
+              <SearchButton />
             </div>
           </div>
+        </div>
       </LanguageContext.Provider>
     </GenresContext.Provider>
   );
