@@ -6,7 +6,7 @@ import Describe from "./Components/Describe";
 import SearchButton from "./Components/SearchButton";
 import LanguageSelect from "./Components/LanguageSelect";
 import { fetchGenres, fetchLanguages } from "./Api/tmdb";
-
+import { Analytics } from "@vercel/analytics/react";
 // Create a context outside of the component
 const GenresContext = createContext();
 const LanguageContext = createContext();
@@ -59,6 +59,8 @@ const App = () => {
       <LanguageContext.Provider
         value={{ languages, selectedLang, setSelectedLang }}
       >
+        <Analytics id="prj_kP6UCci1dxs7Y4DXBo8vhUCKYEcS" />
+
         <div className="m-10">
           <div className="mb-11">
             <Header />
