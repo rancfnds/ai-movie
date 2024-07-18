@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { GenresContext, LanguageContext,CountryContext } from "../App";
+import { GenresContext, LanguageContext } from "../App";
 import { TMDB_API_KEY } from "../config";
 import DisplayMovies from "./DisplayMovies";
 
@@ -12,9 +12,10 @@ const SearchButton = () => {
 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1); // For pagination
   const movieListRef = useRef(null);
 
-  const handleSearch = async () => {
+  const handleSearch = async (newPage = 1) => {
     setLoading(true);
     try {
       const genreIds = selectedGenres.map((genre) => genre.id).join(",");
@@ -23,11 +24,16 @@ const SearchButton = () => {
           api_key: TMDB_API_KEY,
           with_genres: genreIds,
           with_original_language: selectedLang,
+          page: newPage,
         },
       });
 
-      const fetchedMovies = response.data.results.slice(0, 5);
-      setMovies(fetchedMovies);
+      const fetchedMovies = response.data.results;
+      if (newPage === 1) {
+        setMovies(fetchedMovies);
+      } else {
+        setMovies((prevMovies) => [...prevMovies, ...fetchedMovies]);
+      }
     } catch (error) {
       console.error("Error fetching movies:", error);
     } finally {
@@ -37,6 +43,13 @@ const SearchButton = () => {
 
   const handleClearData = () => {
     setMovies([]);
+    setPage(1);
+  };
+
+  const handleShowMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    handleSearch(nextPage);
   };
 
   useEffect(() => {
@@ -50,7 +63,7 @@ const SearchButton = () => {
       <button
         type="button"
         className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-        onClick={handleSearch}
+        onClick={() => handleSearch()}
         disabled={loading}
       >
         {loading ? "Searching..." : "Search"}
@@ -67,6 +80,16 @@ const SearchButton = () => {
       ) : (
         <div ref={movieListRef}>
           <DisplayMovies movies={movies} />
+          {movies.length > 0 && (
+            <button
+              type="button"
+              className="mt-4 py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              onClick={handleShowMore}
+              disabled={loading}
+            >
+              {loading ? "Loading more..." : "Show More Movies"}
+            </button>
+          )}
         </div>
       )}
     </div>
