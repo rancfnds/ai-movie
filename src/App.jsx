@@ -5,22 +5,27 @@ import SearchBar from "./Components/SearchBar";
 import Categories from "./Components/Categories";
 import Describe from "./Components/Describe";
 import SearchButton from "./Components/SearchButton";
-import DisplayMovies from "./Components/DisplayMovies";
-import { fetchGenres } from "./Api/tmdb";
+import LanguageSelect from "./Components/LanguageSelect";
+import { fetchGenres, fetchLanguages } from "./Api/tmdb";
 
 // Create a context outside of the component
 const GenresContext = createContext();
-const favmovie = createContext();
+const LanguageContext = createContext();
 
 const App = () => {
-  //this is for genre
+  // For genres
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
 
-  //this is for search movie name
-  const [input, setinput] = useState("");
+  // For languages
+  const [languages, setLanguages] = useState([]);
+  const [selectedLang, setSelectedLang] = useState("");
 
-  //this is to fetch the list of genere
+  //For country
+  // const [countries, setcountries] = useState([]);
+  // const [selectedCountry, setselectedCountry] = useState("");
+
+  // Fetch genres data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,35 +39,61 @@ const App = () => {
     fetchData();
   }, []);
 
+  // Fetch languages data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchLanguages();
+        setLanguages(data);
+      } catch (error) {
+        console.log("Error has occurred:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  //Fetch country data
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const data = await fetchCountry();
+        setcountries(data);
+      } catch (error) {
+        console.log("Error has occurred:", error);
+      }
+    };
+    fetchdata();
+  }, []);
+
   return (
     <GenresContext.Provider value={{ selectedGenres, setSelectedGenres }}>
-      <favmovie.Provider value={{ input, setinput }}>
-        <div className="m-10">
-          <div className="mb-11">
-            <Header />
+      <LanguageContext.Provider
+        value={{ languages, selectedLang, setSelectedLang }}
+      >
+    
+          <div className="m-10">
+            <div className="mb-11">
+              <Header />
+            </div>
+            <div className="ml-5 mr-5">
+              <div className="mb-5">
+                <SearchBar />
+              </div>
+              <LanguageSelect />
+              <Categories genres={genres} />
+              <div>
+                <Describe />
+              </div>
+              <div>
+                <SearchButton />
+              </div>
+            </div>
           </div>
-
-          <div className="ml-5 mr-5">
-            <div className="mb-5">
-              <SearchBar />
-            </div>
-            <Categories genres={genres} />
-
-            <div>
-              <Describe />
-            </div>
-            <div>
-              <SearchButton />
-            </div>
-
-     
-          </div>
-        </div>
-      </favmovie.Provider>
+      </LanguageContext.Provider>
     </GenresContext.Provider>
   );
 };
 
 export default App;
-export { GenresContext };
-export { favmovie };
+export { GenresContext, LanguageContext };

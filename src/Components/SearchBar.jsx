@@ -1,13 +1,7 @@
 import React, { useContext, useState } from "react";
-import { favmovie } from "../App";
 const SearchBar = () => {
 
   //set the name of the movie
-const {input,setinput} = useContext(favmovie);
-
-  const handleInputChange = (event) => {
-    setinput(event.target.value);
-  };
 
   return (
     <div>
@@ -17,8 +11,7 @@ const {input,setinput} = useContext(favmovie);
           type="text"
           className="w-full h-full bg-transparent text-white px-4 focus:outline-none"
           placeholder="Enter movie name"
-          value={input}
-          onChange={handleInputChange}
+       
         />
       </div>
     </div>
