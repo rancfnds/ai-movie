@@ -36,18 +36,4 @@ export const fetchLanguages = async () => {
 };
 
 
-export const fetchCountry = async () => {
-  try {
-    const response = await axios.get(`https://api.themoviedb.org/3/configuration/countries`, {
-      params: {
-        api_key: TMDB_API_KEY,
-      },
-    });
-   // Log the response data
-    return response.data; // Return language data
-  } catch (error) {
-    console.error('Error fetching languages:', error);
-    throw error;
-  }
-};
 

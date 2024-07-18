@@ -54,18 +54,7 @@ const App = () => {
   }, []);
 
   //Fetch country data
-  useEffect(() => {
-    const fetchdata = async () => {
-      try {
-        const data = await fetchCountry();
-        setcountries(data);
-      } catch (error) {
-        console.log("Error has occurred:", error);
-      }
-    };
-    fetchdata();
-  }, []);
-
+ 
   return (
     <GenresContext.Provider value={{ selectedGenres, setSelectedGenres }}>
       <LanguageContext.Provider
