@@ -1,11 +1,37 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
+import Select from "react-select";
 import { LanguageContext } from "../App";
 
 const LanguageSelect = () => {
   const { languages, selectedLang, setSelectedLang } = useContext(LanguageContext);
 
-  const handleLanguageChange = (event) => {
-    setSelectedLang(event.target.value);
+  const handleLanguageChange = (selectedOption) => {
+    setSelectedLang(selectedOption.value);
+  };
+
+  const languageOptions = languages.map((language) => ({
+    value: language.iso_639_1,
+    label: language.english_name,
+  }));
+
+  const selectedOption = languageOptions.find(option => option.value === selectedLang);
+
+  const customStyles = {
+    control: (styles) => ({
+      ...styles,
+      backgroundColor: "rgb(51 65 85)",
+      borderColor: "none",
+      color: "white",
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isSelected ? "#007bff" : isFocused ? "#f0f0f0" : "white",
+      color: isSelected ? "white" : "black",
+    }),
+    singleValue: (styles) => ({
+      ...styles,
+      color: "white",
+    }),
   };
 
   return (
@@ -13,18 +39,15 @@ const LanguageSelect = () => {
       <label htmlFor="languageSelect" className="mr-2 font-medium text-white">
         Select Language:
       </label>
-      <select
+      <Select
         id="languageSelect"
-        className="py-2 px-3 border border-gray-300 rounded-md transition-colors duration-300 ease-in-out bg-white text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-        value={selectedLang}
+        classNamePrefix="react-select"
+        value={selectedOption}
         onChange={handleLanguageChange}
-      >
-        {languages.map((language) => (
-          <option key={language.iso_639_1} value={language.iso_639_1}>
-            {language.english_name}
-          </option>
-        ))}
-      </select>
+        options={languageOptions}
+        isSearchable
+        styles={customStyles}
+      />
     </div>
   );
 };
